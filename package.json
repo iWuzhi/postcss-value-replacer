@@ -1,25 +1,22 @@
 {
   "name": "postcss-value-replacer",
   "version": "1.0.0",
-  "description": "PostCSS plugin to extract values from css properties and put them into variables.",
+  "description": "PostCSS plugin to replace CSS values to customized values.",
   "keywords": [
     "postcss",
     "css",
     "postcss-plugin",
     "variable"
   ],
-  "author": "lutien <lutien02@gmail.com>",
+  "author": "2461358597@qq.com",
   "license": "MIT",
-  "repository": "lutien/postcss-extract-value",
+  "repository": "iWuzhi/postcss-value-replacer",
   "bugs": {
-    "url": "https://github.com/lutien/postcss-extract-value/issues"
+    "url": "https://github.com/iWuzhi/postcss-value-replacer/issues"
   },
-  "homepage": "https://github.com/lutien/postcss-extract-value",
+  "homepage": "https://github.com/iWuzhi/postcss-value-replacer",
   "dependencies": {
-    "color-name": "^1.1.1",
-    "nearest-color": "^0.4.0",
-    "parse-color": "^1.0.0",
-    "postcss": "^6.0.1"
+    "postcss": "^8.2.8"
   },
   "devDependencies": {
     "coveralls": "^2.11.12",
@@ -32,34 +29,6 @@
   "scripts": {
     "test": "jest --coverage && eslint ./lib/*.js",
     "coverage": "jest --no-cache --coverage && cat ./coverage/lcov.info | coveralls"
-  },
-  "eslintConfig": {
-    "extends": "airbnb-base",
-    "rules": {
-      "indent": [
-        "error",
-        4
-      ],
-      "import/no-extraneous-dependencies": [
-        "off"
-      ],
-      "strict": [
-        "off"
-      ],
-      "no-mixed-operators": [
-        "off"
-      ],
-      "max-len": [
-        "warn",
-        100
-      ],
-      "no-param-reassign": [
-        "off"
-      ]
-    },
-    "env": {
-      "jest": true
-    }
   },
   "jest": {
     "testRegex": "/test/.*.test.js$",

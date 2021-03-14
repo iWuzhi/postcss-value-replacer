@@ -1,27 +1,29 @@
-const run = require('./_run');
+const run = require("./_run");
 
-const optDefault = {
-    filterByProps: ['color', 'border-color'],
-};
-
-it('default settings', () => {
+it("Basic usage", () => {
     const input = `.foo {
         color: #000;
         width: 10px;
         display: block;
     }`;
     const output = `:root {
-        --color-1: #000;
-        --width-1: 10px;
-        --display-1: block;\n}\n.foo {
-        color: var(--color-1);
-        width: var(--width-1);
-        display: var(--display-1);
+        --primary-color: #000;
+        --btn-width: 10px;
+        --display-block: block;\n}\n.foo {
+        color: var(--primary-color);
+        width: var(--btn-width);
+        display: var(--display-block);
     }`;
-    return run(input, output, { });
+    return run(input, output, {
+        filterByValues: {
+            "#000": "primary-color",
+            "10px": "btn-width",
+            block: "display-block",
+        },
+    });
 });
 
-it('repeated values', () => {
+it("repeated values", () => {
     const input = `.foo {
         color: blue;
     }
@@ -36,10 +38,14 @@ it('repeated values', () => {
     .bar {
         color: var(--color-1);
     }`;
-    return run(input, output, optDefault);
+    return run(input, output, {
+        filterByValues: {
+            blue: "color-1",
+        },
+    });
 });
 
-it('exist root element', () => {
+it("exist root element", () => {
     const input = `:root {
         --base-font-size: 16px;
     }
@@ -55,10 +61,15 @@ it('exist root element', () => {
         color: var(--color-1);
         font-size: var(--base-font-size);
     }`;
-    return run(input, output, { });
+    return run(input, output, {
+        filterByValues: {
+            "16px": "base-font-size",
+            "#000": "color-1",
+        },
+    });
 });
 
-it('several colors in one property', () => {
+it("several colors in one property", () => {
     const input = `.foo {
         box-shadow: inset 0 2px 0px #dcffa6, 0 2px 5px #000;
     }`;
@@ -67,43 +78,15 @@ it('several colors in one property', () => {
         --box-shadow-2: #000;\n}\n.foo {
         box-shadow: inset 0 2px 0px var(--box-shadow-1), 0 2px 5px var(--box-shadow-2);
     }`;
-    return run(input, output, { onlyColor: true });
-});
-
-it('custom element for css variables', () => {
-    const input = `.foo {
-        --color-1: black;
-    }
-    .bar {
-        border-color: red;
-    }`;
-    const output = `.foo {
-        --color-1: black;
-        --border-color-1: red;
-    }
-    .bar {
-        border-color: var(--border-color-1);
-    }`;
-    return run(input, output, { scope: '.foo' });
-});
-
-it('filter by color and props', () => {
-    const input = `.foo {
-        border: 1px solid #000;
-        background-color: red;
-    }`;
-    const output = `:root {
-        --border-1: #000;\n}\n.foo {
-        border: 1px solid var(--border-1);
-        background-color: red;
-    }`;
     return run(input, output, {
-        onlyColor: true,
-        filterByProps: ['border'],
+        filterByValues: {
+            "#dcffa6": "box-shadow-1",
+            "#000": "box-shadow-2",
+        },
     });
 });
 
-it('default value in css variable', () => {
+it("default value in css variable", () => {
     const input = `:root {
         --base-color: #fff;
     }
@@ -117,26 +100,13 @@ it('default value in css variable', () => {
     }
     .foo {
         color: var(--base-color, #000);
-        border: 1px solid var(--border-1);
+        border: 1px solid var(--border-1, #eee);
     }`;
-    return run(input, output, { onlyColor: true });
-});
-
-it('variable with several color values', () => {
-    const input = `:root {
-        --base-color: #fff;
-    }
-    .foo {
-        border: 1px solid var(--base-color),
-        2px solid #000;
-    }`;
-    const output = `:root {
-        --base-color: #fff;
-        --border-1: #000;
-    }
-    .foo {
-        border: 1px solid var(--base-color),
-        2px solid var(--border-1);
-    }`;
-    return run(input, output, { onlyColor: true });
+    return run(input, output, {
+        filterByValues: {
+            "#fff": "base-color",
+            "#eee": "border-1",
+        },
+        preserveDefault: true,
+    });
 });
